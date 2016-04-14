@@ -17,9 +17,11 @@ class Avatarly
   class << self
     def generate_avatar(text, opts={})
       if opts[:lang]
-        text = UnicodeUtils.upcase(initials(text.to_s.strip.gsub(/[^[[:word:]] ]/,'')), opts[:lang])
+        text = initials(text.to_s.strip.gsub(/[^[[:word:]] ]/,''))
+        text = UnicodeUtils.upcase(text, opts[:lang]) if opts[:upcase]
       else
-        text = initials(text.to_s.strip.gsub(/[^\w ]/,'')).upcase
+        text = initials(text.to_s.strip.gsub(/[^\w ]/,''))
+        text = text.upcase if opts[:upcase]
       end
       generate_image(text, parse_options(opts)).to_blob
     end
@@ -81,6 +83,7 @@ class Avatarly
         size: 32,
         vertical_offset: 0,
         font: "#{fonts}/Roboto.ttf",
+        upcase: true,
         format: "png" }
     end
 
