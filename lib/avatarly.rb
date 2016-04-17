@@ -23,7 +23,8 @@ class Avatarly
         text = initials(text.to_s.strip.gsub(/[^\w ]/,''))
         text = text.upcase if opts[:upcase]
       end
-      generate_image(text, parse_options(opts)).to_blob
+      opts = parse_options(opts)
+      generate_image(text, opts).to_blob { self.quality = opts[:quality]; self.depth = 8 }
     end
 
     def root
@@ -46,7 +47,7 @@ class Avatarly
       end.draw
       image.format = opts[:format]
       draw_text(image, text, opts) if text.length > 0
-      image
+      image.quantize(8)
     end
 
     def draw_text(canvas, text, opts)
@@ -84,6 +85,7 @@ class Avatarly
         vertical_offset: 0,
         font: "#{fonts}/Roboto.ttf",
         upcase: true,
+        quality: 90,
         format: "png" }
     end
 
@@ -94,6 +96,7 @@ class Avatarly
       opts[:font_size] ||= opts[:size] / 2
       opts[:font_size] = opts[:font_size].to_i
       opts[:vertical_offset] = opts[:vertical_offset].to_i
+      opts[:quality]   = opts[:quality].to_i
       opts
     end
   end
