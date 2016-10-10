@@ -17,10 +17,10 @@ class Avatarly
   class << self
     def generate_avatar(text, opts={})
       if opts[:lang]
-        text = initials(text.to_s.strip.gsub(/[^[[:word:]] ]/,''))
+        text = initials(text.to_s.strip.gsub(/[^[[:word:]]@ ]/,''))
         text = UnicodeUtils.upcase(text, opts[:lang]) if opts[:upcase]
       else
-        text = initials(text.to_s.strip.gsub(/[^\w ]/,''))
+        text = initials(text.to_s.strip.gsub(/[^\w@ ]/,''))
         text = text.upcase if opts[:upcase]
       end
       opts = parse_options(opts)
