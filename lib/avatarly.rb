@@ -1,7 +1,6 @@
 require 'rvg/rvg'
 require 'rfc822'
 require 'pathname'
-require 'unicode_utils'
 
 class Avatarly
   BACKGROUND_COLORS = [
@@ -16,13 +15,9 @@ class Avatarly
 
   class << self
     def generate_avatar(text, opts={})
-      if opts[:lang]
-        text = initials(text.to_s.strip.gsub(/[^[[:word:]]@ ]/,''))
-        text = UnicodeUtils.upcase(text, opts[:lang]) if opts[:upcase]
-      else
-        text = initials(text.to_s.strip.gsub(/[^\w@ ]/,''))
-        text = text.upcase if opts[:upcase]
-      end
+      text = initials(text.to_s.strip.gsub(/[^\w@ ]/,''))
+      text = text.upcase if opts[:upcase]
+
       opts = parse_options(opts)
       generate_image(text, opts).to_blob { self.quality = opts[:quality]; self.depth = 8 }
     end
