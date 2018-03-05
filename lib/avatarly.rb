@@ -66,8 +66,7 @@ class Avatarly
 
     def initials_for_separator(text, separator)
       if text.include?(separator)
-        text = text.split(separator)
-        text[0][0] + text[1][0]
+        text.split(separator).compact.map { |part| part[0] }.join
       else
         text[0] || ''
       end
