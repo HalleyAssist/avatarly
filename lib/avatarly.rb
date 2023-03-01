@@ -19,7 +19,7 @@ class Avatarly
       text = text.upcase if opts[:upcase]
 
       opts = parse_options(opts)
-      generate_image(text, opts).to_blob { self.quality = opts[:quality]; self.depth = 8 }
+      generate_image(text, opts).to_blob { |blob| blob.quality = opts[:quality]; blob.depth = 8 }
     end
 
     def root
