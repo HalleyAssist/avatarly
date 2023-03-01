@@ -13,7 +13,8 @@ describe Avatarly do
                                                background_color: "#FFFFFF",
                                                font_color: "#000000",
                                                vertical_offset: 5,
-                                               size: 64)
+                                               size: 64,
+                                               upcase: true)
 
       assert_image_equality(result, :HW_white_black_offset_64, 10)
     end
@@ -47,14 +48,16 @@ describe Avatarly do
 
       it 'falls back to single-letter avatar when no dots and spaces found' do
         result = described_class.generate_avatar("HelloWorld",
-                                                 background_color: "#000000")
+                                                 background_color: "#000000",
+                                                 upcase: true)
         assert_image_equality(result, :H_black_white_32)
       end
 
       it 'can generate using custom separators' do
         result = described_class.generate_avatar("hfoow",
                                                  background_color: "#000000",
-                                                 separator: "foo")
+                                                 separator: "foo",
+                                                 upcase: true)
         assert_image_equality(result, :HW_black_white_32, 34)
       end
 
