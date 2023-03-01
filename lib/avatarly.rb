@@ -15,7 +15,7 @@ class Avatarly
 
   class << self
     def generate_avatar(text, opts={})
-      text = initials(text.to_s.strip.gsub(/[^\w@ ]/,''))
+      text = initials(text.to_s.strip.gsub(/[^\w@ ]/,''), opts)
       text = text.upcase if opts[:upcase]
 
       opts = parse_options(opts)
