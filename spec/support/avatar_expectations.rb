@@ -17,7 +17,7 @@ module AvatarExpectations
     result = actual_image.duplicate?(expected_image, threshold: hamming_distance)
 
     unless result
-      puts "Hamming distance between two images: #{actual_image.distance_from(expected_image)}. Required at least #{hamming_distance}."
+      puts "Hamming distance between two images\nExpected: #{expected_image_path}\nActual: #{actual_image_path}\n#{actual_image.distance_from(expected_image)}. Required at least #{hamming_distance}."
     end
 
     expect(result).to be true

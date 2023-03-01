@@ -1,4 +1,4 @@
-[![Demo](http://f.cl.ly/items/0M3L273P2r2l0A3L052M/avatars.png)](http://avatarly.herokuapp.com)
+[![Demo](assets/images/avatarly.jpeg)](http://avatarly.herokuapp.com)
 
 # avatarly
 
@@ -53,6 +53,7 @@ the only required parameter is <tt>text</tt>. Other options that you can pass ar
 * <tt>vertical_offset</tt> (default: 0)
 * <tt>format</tt> (default: png)
 * <tt>lang</tt> (language code if unicode aware upcase required - e.g: :tr, default: nil)
+* <tt>separator</tt> (the custom string or regex used to split <tt>text</tt> into its initials)
 
 As a result you will get an image blob - rest is up to you, do whatever you want with it.
 
@@ -66,3 +67,9 @@ For instance you can store avatar in directory with images:
 ## License
 
 MIT
+
+# Maintainers and support
+
+Thanks for help with the project:
+
+[![Knapsack Pro logo](https://docs.knapsackpro.com/images/logo.png) Knapsack Pro](https://knapsackpro.com/?utm_source=github&utm_medium=readme&utm_campaign=avatarly-gem-readme) - learn [how to speed up Ruby and JavaScript tests with CI parallelisation](https://docs.knapsackpro.com/2020/how-to-speed-up-ruby-and-javascript-tests-with-ci-parallelisation)

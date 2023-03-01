@@ -2,6 +2,24 @@
 
 * TODO
 
+### 1.6.1
+
+* Fix: `warning: passing a block without an image argument is deprecated`.
+
+    https://github.com/lucek/avatarly/pull/21
+
+### 1.6.0
+
+* Allow custom separator to be used in text
+
+    https://github.com/lucek/avatarly/pull/18
+
+### 1.5.1
+
+* Fixed an error when the text has a non-word character and a space next to it
+
+    https://github.com/lucek/avatarly/pull/17
+
 ### 1.5.0
 
 * Add vertical setting
