@@ -1,5 +1,4 @@
 require 'rvg/rvg'
-require 'rfc822'
 require 'pathname'
 
 class Avatarly
@@ -57,8 +56,6 @@ class Avatarly
     def initials(text, opts)
       if opts[:separator]
         initials_for_separator(text, opts[:separator])
-      elsif text.is_email?
-        initials_for_separator(text.split("@").first, ".")
       elsif text.include?(" ")
         initials_for_separator(text, " ")
       else
