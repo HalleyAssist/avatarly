@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Avatarly do
   describe '.generate_avatar' do
-    it 'generates avatar for given email address' do
+    it 'for the provided name' do
       result = described_class.generate_avatar("hello",
                                                background_color: "#000000")
       assert_image_equality(result, :HW_black_white_32, 34)
