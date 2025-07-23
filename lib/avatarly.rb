@@ -1,4 +1,4 @@
-require 'rvg/rvg'
+require 'vips'
 require 'pathname'
 
 class Avatarly
@@ -14,14 +14,15 @@ class Avatarly
 
   class << self
     def generate_avatar(text, opts={})
+      opts = parse_options(opts)
+
+      # Convert text to initials
       text = initials(text.to_s.strip.gsub(/[^\w@ ]/,''), opts)
       text = text.upcase if opts[:upcase]
-
-      opts = parse_options(opts)
+      
+      # Create image with initials
       image = generate_image(text, opts)
-      blob = image.to_blob { |blob| blob.quality = opts[:quality]; blob.depth = 8 }
-      image.destroy!
-      blob
+      image.write_to_buffer ".#{opts[:format]}[Q=#{opts[:quality]}]"
     end
 
     def root
@@ -39,21 +40,32 @@ class Avatarly
     end
 
     def generate_image(text, opts)
-      image = Magick::RVG.new(opts[:size], opts[:size]).viewbox(0, 0, opts[:size], opts[:size]) do |canvas|
-        canvas.background_fill = opts[:background_color]
-      end.draw
-      image.format = opts[:format]
-      draw_text(image, text, opts) if text.length > 0
-      image.quantize(8)
+      # Create background with solid colour
+      background_image = Vips::Image.black(opts[:size], opts[:size]).colourspace(:srgb)
+      background_image = background_image.new_from_image(hex_to_rgb(opts[:background_color]))
+
+      # Write text
+      draw_text(background_image, text, opts)
     end
 
     def draw_text(canvas, text, opts)
-      Magick::Draw.new do |md|
-        md.pointsize = opts[:font_size]
-        md.font = opts[:font]
-        md.fill = opts[:font_color]
-        md.gravity = Magick::CenterGravity
-      end.annotate(canvas, 0, 0, 0, opts[:vertical_offset], text)
+      # Create centred text
+      text_mask = Vips::Image.text(text,
+                                   font: 'Roboto',
+                                   fontfile: "#{fonts}/Roboto.ttf",
+                                   height: opts[:size],
+                                   dpi: opts[:size]*3
+                                  )
+      text_mask = text_mask.gravity :centre, opts[:size], opts[:size]
+      text_mask = text_mask.embed 0, text_mask.height/50, opts[:size], opts[:size]
+      
+      # Write text in font colour
+      text_colour = hex_to_rgb(opts[:font_color])
+      text_image = (text_mask.new_from_image text_colour).copy interpretation: :srgb
+      text_image = text_image.bandjoin text_mask
+
+      # Write on background image
+      canvas.composite(text_image, :over)
     end
 
     def initials(text, opts)
@@ -68,7 +80,7 @@ class Avatarly
 
     def initials_for_separator(text, separator)
       if text.include?(separator)
-        text.split(separator).compact.map { |part| part[0] }.join
+        text.split(separator).compact.map { |part| part[0] }.first(3).join
       else
         text[0] || ''
       end
@@ -78,8 +90,6 @@ class Avatarly
       { background_color: BACKGROUND_COLORS.sample,
         font_color: '#FFFFFF',
         size: 32,
-        vertical_offset: 0,
-        font: "#{fonts}/Roboto.ttf",
         upcase: true,
         quality: 90,
         format: "png" }
@@ -88,12 +98,17 @@ class Avatarly
     def parse_options(opts)
       opts = default_options.merge(opts)
       opts[:size] = opts[:size].to_i
-      opts[:font] = default_options[:font] unless Pathname(opts[:font]).exist?
-      opts[:font_size] ||= opts[:size] / 2
-      opts[:font_size] = opts[:font_size].to_i
-      opts[:vertical_offset] = opts[:vertical_offset].to_i
-      opts[:quality]   = opts[:quality].to_i
+      opts[:quality] = opts[:quality].to_i
       opts
+    end
+
+    # Splits RGB colour code into Vips compatible array
+    def hex_to_rgb(hex_color)
+      hex_color = hex_color.gsub("#", "")
+      r = hex_color[0..1].to_i(16)
+      g = hex_color[2..3].to_i(16)
+      b = hex_color[4..5].to_i(16)
+      [r, g, b]
     end
   end
 end

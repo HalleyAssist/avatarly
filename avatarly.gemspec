@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.add_runtime_dependency('rmagick')
+  s.add_runtime_dependency('ruby-vips')
 
   s.name        = "avatarly"
   s.version     = "1.6.1.1"
